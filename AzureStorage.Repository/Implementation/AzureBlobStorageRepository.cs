@@ -1,4 +1,5 @@
 ﻿using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
 using AzureStorage.Repository.Interface;
 using Microsoft.Extensions.Configuration;
@@ -27,15 +28,23 @@ namespace AzureStorage.Repository.Implementation
         }
 
 
-        public async Task AddToBlob(string jsonString)
+        public async Task<string> AddToBlob(string fileName,string jsonString)
         {
 
-            BlobClient blob = _formBuilderContainerClient.GetBlobClient("SavedFormHistoryDemo");
+
+            // Retrieve reference to a blob named.
+            BlobClient blockBlob = _formBuilderContainerClient.GetBlobClient(fileName);
+
+
+            var blobHttpHeader = new BlobHttpHeaders { ContentType = "application/json" };
+
+
 
             using (MemoryStream json = new MemoryStream(Encoding.UTF8.GetBytes(jsonString)))
             {
-                await blob.UploadAsync(json);
+                await blockBlob.UploadAsync(json, blobHttpHeader);
             }
+            return blockBlob.Uri.ToString();
             /*BlobContainerClient.UploadBlobAsync(json);*/
         }
 

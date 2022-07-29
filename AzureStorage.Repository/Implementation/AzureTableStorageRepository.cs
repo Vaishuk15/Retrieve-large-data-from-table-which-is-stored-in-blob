@@ -24,30 +24,36 @@ namespace AzureStorage.Repository.Implementation
             _tableName = typeof(T).Name;
             table = CreateTableAsync(_tableName);
         }
-        public async Task<T> GetAsync(string partitionKey, string rowKey)
-        {
-            TableOperation retrieveOperation = TableOperation.Retrieve<T>(partitionKey, rowKey);
-            TableResult result = await table.ExecuteAsync(retrieveOperation);
-            return (T)result.Result;
-        }
+        //public async Task<T> GetAsync(string partitionKey, string rowKey)
+        //{
+        //    TableOperation retrieveOperation = TableOperation.Retrieve<T>(partitionKey, rowKey);
+        //    TableResult result = await table.ExecuteAsync(retrieveOperation);
+        //    return (T)result.Result;
+        //}
 
-        public async Task DeleteAsync(string partitionKey, string rowKey)
-        {
+        //public async Task DeleteAsync(string partitionKey, string rowKey)
+        //{
 
-            var entity = new TableEntity
-            {
-                PartitionKey = partitionKey,
-                RowKey = rowKey,
-                ETag = "*"
-            };
-            TableOperation delteOperation = TableOperation.Delete(entity);
-            await table.ExecuteAsync(delteOperation);
+        //    var entity = new TableEntity
+        //    {
+        //        PartitionKey = partitionKey,
+        //        RowKey = rowKey,
+        //        ETag = "*"
+        //    };
+        //    TableOperation delteOperation = TableOperation.Delete(entity);
+        //    await table.ExecuteAsync(delteOperation);
 
-        }
+        //}
 
         public async Task InsertAsync(T data)
         {
-            TableOperation insertOrMergeOperation = TableOperation.Insert(data);
+            //var tempType=typeof(T);
+            //var genericArgument = typeof(T).GetGenericArguments().FirstOrDefault();
+            //if (tempType != null && genericArgument != null)
+            //{
+            //    Type newType = tempType.MakeGenericType(genericArgument);
+            //}
+                TableOperation insertOrMergeOperation = TableOperation.Insert(data);
 
             await table.ExecuteAsync(insertOrMergeOperation);
         }

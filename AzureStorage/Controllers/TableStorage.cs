@@ -9,9 +9,9 @@ namespace AzureStorage.Controllers
     public class TableStorage : ControllerBase
     {
         private readonly ILogger<TableStorage> _logger;
-        private readonly IAzureTableStorageService _tableService;
+        private readonly IAzureTableStorageService<SavedFormDemoViewModel> _tableService;
 
-        public TableStorage(ILogger<TableStorage> logger, IAzureTableStorageService formService)
+        public TableStorage(ILogger<TableStorage> logger, IAzureTableStorageService<SavedFormDemoViewModel> formService)
         {
             _logger = logger;
             _tableService = formService;

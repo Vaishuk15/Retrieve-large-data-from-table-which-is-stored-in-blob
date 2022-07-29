@@ -10,8 +10,8 @@ namespace AzureStorage.Repository.Interface
 {
     public interface IAzureTableStorageRepository<T>
     {
-        Task<T> GetAsync(string partitionKey, string rowKey);
-        Task DeleteAsync(string partitionKey, string rowKey);
+        //Task<T> GetAsync(string partitionKey, string rowKey);
+        //Task DeleteAsync(string partitionKey, string rowKey);
         Task InsertAsync(T data);
     }
 }

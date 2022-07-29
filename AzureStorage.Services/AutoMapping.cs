@@ -14,9 +14,9 @@ namespace AzureStorage.Services
         public AutoMapping()
         {
             CreateMap<SavedFormDemoViewModel, SavedFormHistoryDemo>()
-                .ForMember(d => d.PartitionKey, opt => opt.MapFrom(src => src.Id))
+                .ForMember(d => d.PartitionKey, opt => opt.MapFrom(src => src.Name))
                 .ForMember(d => d.RowKey, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))
-                .ForMember(d => d.FormId, opt => opt.MapFrom(src => src.FormId))
+                .ForMember(d => d.FormId, opt => opt.MapFrom(src => src.Id))
                 .ReverseMap();
         }
     }

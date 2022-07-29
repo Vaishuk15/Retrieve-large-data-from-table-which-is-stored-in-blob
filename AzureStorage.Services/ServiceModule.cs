@@ -13,8 +13,10 @@ namespace AzureStorage.Services
     {
         public ServiceModule(IServiceCollection services)
         {
-            //services.AddTransient<IAzureBlobStorageService, AzureBlobStorageService>();
-            services.AddTransient<IAzureTableStorageService, AzureTableStorageService>();
+           services.AddTransient<IAzureBlobStorageService, AzureBlobStorageService>();
+            //services.AddTransient<IAzureTableStorageService, AzureTableStorageService>();
+            services.AddTransient(typeof(IAzureTableStorageService<>), typeof(AzureTableStorageService<>));
+
         }
     }
 }

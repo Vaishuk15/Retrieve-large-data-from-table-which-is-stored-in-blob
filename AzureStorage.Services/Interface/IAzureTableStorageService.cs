@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AzureStorage.Services.Interface
 {
-    public interface IAzureTableStorageService
+    public interface IAzureTableStorageService<T>
     {
         Task<bool> AddToTable(SavedFormDemoViewModel jsonData);
     }

@@ -8,6 +8,6 @@ namespace AzureStorage.Repository.Interface
 {
     public interface IAzureBlobStorageRepository
     {
-        Task AddToBlob(string jsonString);
+        Task<string> AddToBlob(string fileName, string jsonString);
     }
 }

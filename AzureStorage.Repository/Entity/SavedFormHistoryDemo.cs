@@ -1,4 +1,4 @@
-﻿using Microsoft.WindowsAzure.Storage.Table;
+﻿using Microsoft.Azure.Cosmos.Table;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +14,7 @@ namespace AzureStorage.Repository.Entity
             PartitionKey = partitionKey;
             RowKey = rowKey;
         }
+        public string Id { get; set; }
         public string FormId { get; set; }
         public string? Name { get; set; }
         public string FormJsonStringUrl { get; set; }

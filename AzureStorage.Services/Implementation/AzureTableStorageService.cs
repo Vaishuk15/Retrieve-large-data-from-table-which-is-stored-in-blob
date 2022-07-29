@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AzureStorage.Services.Implementation
 {
-    public class AzureTableStorageService : IAzureTableStorageService
+    public class AzureTableStorageService<T> : IAzureTableStorageService<T> where T : class
     {
         private readonly IAzureTableStorageRepository<SavedFormHistoryDemo> _tableStorageRepository;
         private readonly IAzureBlobStorageRepository _blobStorageRepository;
@@ -25,7 +25,9 @@ namespace AzureStorage.Services.Implementation
         }
         public async Task<bool> AddToTable(SavedFormDemoViewModel jsonData)
         {
-            _blobStorageRepository.AddToBlob(jsonData.FormJsonString);
+            var savedForm = _mapper.Map<SavedFormHistoryDemo>(jsonData);
+          var blobUri= await  _blobStorageRepository.AddToBlob(savedForm.RowKey, jsonData.FormJsonString);
+            savedForm.FormJsonStringUrl = blobUri;
             var result = _tableStorageRepository.InsertAsync(_mapper.Map<SavedFormHistoryDemo>(jsonData));
             return true;
         }

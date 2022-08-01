@@ -10,5 +10,6 @@ namespace AzureStorage.Services.Interface
     public interface IAzureTableStorageService<T>
     {
         Task<bool> AddToTable(SavedFormDemoViewModel jsonData);
+        Task<SavedFormDemoViewModel> GetTableData(string rowKey, string partitionKey);
     }
 }

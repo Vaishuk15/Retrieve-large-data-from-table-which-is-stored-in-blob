@@ -24,35 +24,35 @@ namespace AzureStorage.Repository.Implementation
             _tableName = typeof(T).Name;
             table = CreateTableAsync(_tableName);
         }
-        //public async Task<T> GetAsync(string partitionKey, string rowKey)
-        //{
-        //    TableOperation retrieveOperation = TableOperation.Retrieve<T>(partitionKey, rowKey);
-        //    TableResult result = await table.ExecuteAsync(retrieveOperation);
-        //    return (T)result.Result;
-        //}
+        public async Task<T> GetAsync(string partitionKey, string rowKey)
+        {
+            TableOperation retrieveOperation = TableOperation.Retrieve<T>(partitionKey, rowKey);
+            TableResult result = await table.ExecuteAsync(retrieveOperation);
+            return (T)result.Result;
+        }
 
-        //public async Task DeleteAsync(string partitionKey, string rowKey)
-        //{
+        public  T GetByPartitionKey(string partitionKey)
+        {
+            TableQuery<T> rangeQuery = new TableQuery<T>().Where(
+                        TableQuery.GenerateFilterCondition("FormId", QueryComparisons.Equal, partitionKey));
 
-        //    var entity = new TableEntity
-        //    {
-        //        PartitionKey = partitionKey,
-        //        RowKey = rowKey,
-        //        ETag = "*"
-        //    };
-        //    TableOperation delteOperation = TableOperation.Delete(entity);
-        //    await table.ExecuteAsync(delteOperation);
+            var results = new List<T>();
 
-        //}
+            TableContinuationToken continuationToken = null;
+            do
+            {
+                var data = table.ExecuteQuerySegmented(rangeQuery, continuationToken);
+                continuationToken = data.ContinuationToken;
+                results.AddRange(data.Results);
+
+            } while (continuationToken != null);
+
+            var response = results.OrderByDescending(x => x.Timestamp).FirstOrDefault();
+            return response;
+        }
 
         public async Task InsertAsync(T data)
         {
-            //var tempType=typeof(T);
-            //var genericArgument = typeof(T).GetGenericArguments().FirstOrDefault();
-            //if (tempType != null && genericArgument != null)
-            //{
-            //    Type newType = tempType.MakeGenericType(genericArgument);
-            //}
                 TableOperation insertOrMergeOperation = TableOperation.Insert(data);
 
             await table.ExecuteAsync(insertOrMergeOperation);

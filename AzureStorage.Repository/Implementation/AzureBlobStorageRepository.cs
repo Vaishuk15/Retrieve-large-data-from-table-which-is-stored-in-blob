@@ -45,19 +45,39 @@ namespace AzureStorage.Repository.Implementation
                 await blockBlob.UploadAsync(json, blobHttpHeader);
             }
             return blockBlob.Uri.ToString();
-            /*BlobContainerClient.UploadBlobAsync(json);*/
         }
 
-        public Uri getBlobUrl()
+        public Uri GetServiceSasUriForContainer(string fileName)
         {
+            // Check whether this BlobContainerClient object has been authorized with Shared Key.
+            if (!_formBuilderContainerClient.CanGenerateSasUri)
+            {
+                return null;
+            }
 
+            // Create a SAS token that's valid for one hour.
             BlobSasBuilder sasBuilder = new BlobSasBuilder()
             {
-                BlobContainerName = _formBuilderContainerClient.Name,
+                BlobContainerName = _containerName,
                 Resource = "c"
             };
+
+            sasBuilder.ExpiresOn = DateTimeOffset.UtcNow.AddMinutes(15);
+            sasBuilder.SetPermissions(BlobContainerSasPermissions.Read | BlobContainerSasPermissions.List | BlobContainerSasPermissions.Tag);
+
             Uri sasUri = _formBuilderContainerClient.GenerateSasUri(sasBuilder);
             return sasUri;
+        }
+
+        public async Task<string> GetBlobData(string blobUrl,string fileName)
+        {
+            var sasUrl = GetServiceSasUriForContainer(blobUrl).ToString();
+           var url= sasUrl.Split("?");
+            var res = url[0]+"/"+ fileName + "?" + url[1];
+            BlobClient blockBlob = _formBuilderContainerClient.GetBlobClient(fileName);
+            BlobDownloadResult downloadResult = await blockBlob.DownloadContentAsync();
+            string downloadedData = downloadResult.Content.ToString();
+            return downloadedData;
         }
 
         private BlobContainerClient GetContainerClient(string connectionString, string containerName)

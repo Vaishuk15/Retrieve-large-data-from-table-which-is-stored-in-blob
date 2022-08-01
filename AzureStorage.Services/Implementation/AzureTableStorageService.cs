@@ -28,8 +28,20 @@ namespace AzureStorage.Services.Implementation
             var savedForm = _mapper.Map<SavedFormHistoryDemo>(jsonData);
           var blobUri= await  _blobStorageRepository.AddToBlob(savedForm.RowKey, jsonData.FormJsonString);
             savedForm.FormJsonStringUrl = blobUri;
-            var result = _tableStorageRepository.InsertAsync(_mapper.Map<SavedFormHistoryDemo>(jsonData));
+            var result =  _tableStorageRepository.InsertAsync(savedForm);
+
             return true;
+        }
+
+
+        public async Task<SavedFormDemoViewModel> GetTableData(string rowKey, string partitionKey)
+        {
+            var tableData = await _tableStorageRepository.GetAsync(partitionKey, rowKey);
+            //var tableData=  _tableStorageRepository.GetByPartitionKey(partitionKey);
+            var table = _mapper.Map<SavedFormHistoryDemo>(tableData);
+            var data = _mapper.Map<SavedFormDemoViewModel>(tableData);
+            data.FormJsonString = await _blobStorageRepository.GetBlobData(table.FormJsonStringUrl, table.RowKey);
+            return data;
         }
     }
 }

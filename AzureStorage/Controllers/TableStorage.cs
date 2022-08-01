@@ -30,5 +30,15 @@ namespace AzureStorage.Controllers
                 throw;
             }
         }
+
+
+        [HttpGet("get/{rowKey}/{partitionKey}")]
+        public async Task<IActionResult> GetTableData(string rowKey,string partitionKey)
+        {
+
+            var data = await _tableService.GetTableData(rowKey, partitionKey);
+
+            return Ok(data);
+        }
     }
 }

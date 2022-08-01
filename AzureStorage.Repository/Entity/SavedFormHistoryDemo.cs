@@ -14,6 +14,10 @@ namespace AzureStorage.Repository.Entity
             PartitionKey = partitionKey;
             RowKey = rowKey;
         }
+        public SavedFormHistoryDemo()
+        {
+
+        }
         public string Id { get; set; }
         public string FormId { get; set; }
         public string? Name { get; set; }

@@ -71,9 +71,9 @@ namespace AzureStorage.Repository.Implementation
 
         public async Task<string> GetBlobData(string blobUrl,string fileName)
         {
-            var sasUrl = GetServiceSasUriForContainer(blobUrl).ToString();
-           var url= sasUrl.Split("?");
-            var res = url[0]+"/"+ fileName + "?" + url[1];
+           // var sasUrl = GetServiceSasUriForContainer(blobUrl).ToString();
+           //var url= sasUrl.Split("?");
+           // var res = url[0]+"/"+ fileName + "?" + url[1];
             BlobClient blockBlob = _formBuilderContainerClient.GetBlobClient(fileName);
             BlobDownloadResult downloadResult = await blockBlob.DownloadContentAsync();
             string downloadedData = downloadResult.Content.ToString();
